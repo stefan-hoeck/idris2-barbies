@@ -4,15 +4,15 @@ import public Language.Reflection.Derive
 
 %default total
 
-||| Proof that a `TTImp` corresponds to `Type -> Type`.
+||| Proof that a `TTImp` corresponds to `k -> Type` for some `k`.
 public export
-data TypeToType : TTImp -> Type where
-  IsTypeToType : TypeToType  (IPi f1 MW ExplicitArg n2 (IType f2) (IType f3))
+data ToType : TTImp -> Type where
+  IsToType : {k : TTImp} -> ToType  (IPi f1 MW ExplicitArg n2 k (IType f3))
 
 public export
-typeToType : (t : TTImp) -> Maybe (TypeToType t)
-typeToType (IPi _ MW ExplicitArg _ (IType _) (IType _)) = Just IsTypeToType
-typeToType _ = Nothing
+toType : (t : TTImp) -> Maybe (ToType t)
+toType (IPi _ MW ExplicitArg _ k (IType _)) = Just IsToType
+toType _ = Nothing
 
 ||| Proof that the last in a list of arguments is of type `Type -> Type`
 public export
@@ -20,14 +20,14 @@ data BarbieArgs : Vect n Arg -> Type where
   BAHere  :
        {0 t : TTImp}
     -> {n : Name}
-    -> {auto 0 prf : TypeToType t}
+    -> {auto prf : ToType t}
     -> BarbieArgs [MkArg c ExplicitArg (Just n) t]
   BAThere : BarbieArgs vs -> BarbieArgs (v :: vs)
 
 public export
 barbieArgs : (vs : Vect n Arg) -> Maybe (BarbieArgs vs)
 barbieArgs [MkArg c ExplicitArg (Just n) t] =
-  let Just _ := typeToType t | Nothing => Nothing
+  let Just _ := toType t | Nothing => Nothing
    in Just BAHere
 barbieArgs (x :: xs) = BAThere <$> barbieArgs xs
 barbieArgs [] = Nothing
@@ -37,6 +37,12 @@ public export
 barbieArg : BarbieArgs vs -> Name
 barbieArg (BAHere {n}) = n
 barbieArg (BAThere x)  = barbieArg x
+
+||| Name of the last argument of a `Barbie` type constructor.
+public export
+barbieKind : BarbieArgs vs -> TTImp
+barbieKind (BAHere @{IsToType {k}}) = k
+barbieKind (BAThere x)  = barbieKind x
 
 ||| Proof that a parameterized type is actually a `Barbie`.
 public export
@@ -81,3 +87,9 @@ public export
 public export %inline
 (.implicits) : BarbieInfo -> List Arg
 (.implicits) p = implicits p.explicitArgs
+
+||| Returns the kind of the first argument of the last parameter of
+||| a barbie.
+public export %inline
+(.kind) : BarbieInfo -> TTImp
+(.kind) p = barbieKind p.prf

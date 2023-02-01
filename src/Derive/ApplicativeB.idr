@@ -9,18 +9,18 @@ import Derive.BarbieInfo
 --          Claims
 --------------------------------------------------------------------------------
 
-bpureTpe : TTImp -> TTImp
-bpureTpe arg =
+bpureTpe : (k : TTImp) -> TTImp -> TTImp
+bpureTpe k arg =
   `(
-       {0 f : Type -> Type}
-    -> ((0 a : Type) -> f a)
+       {0 f : ~(k) -> Type}
+    -> ((0 a : ~(k)) -> f a)
     -> ~(arg) f
   )
 
-bprodTpe : TTImp -> TTImp
-bprodTpe arg =
+bprodTpe : (k : TTImp) -> TTImp -> TTImp
+bprodTpe k arg =
   `(
-       {0 f,g : Type -> Type}
+       {0 f,g : ~(k) -> Type}
     -> ~(arg) f
     -> ~(arg) g
     -> ~(arg) (\x => Pair (f x) (g x))
@@ -29,20 +29,19 @@ bprodTpe arg =
 export
 bpureClaim : Visibility -> (fun : Name) -> (p : BarbieInfo) -> Decl
 bpureClaim vis fun p =
-  simpleClaim vis fun $ piAll (bpureTpe p.applied) p.implicits
+  simpleClaim vis fun $ piAll (bpureTpe p.kind p.applied) p.implicits
 
 export
 bprodClaim : Visibility -> (fun : Name) -> (p : BarbieInfo) -> Decl
 bprodClaim vis fun p =
-  simpleClaim vis fun $ piAll (bprodTpe p.applied) p.implicits
+  simpleClaim vis fun $ piAll (bprodTpe p.kind p.applied) p.implicits
 
 ||| Top-level declaration implementing the `Eq` interface for
 ||| the given data type.
 export
 applicativeImplClaim : Visibility -> (impl : Name) -> (p : BarbieInfo) -> Decl
 applicativeImplClaim vis impl p =
-  let arg := p.applied
-      tpe := piAll `(ApplicativeB ~(arg)) p.implicits
+  let tpe := piAll `(ApplicativeB ~(p.kind) ~(p.applied)) p.implicits
    in implClaimVis vis impl tpe
 
 --------------------------------------------------------------------------------

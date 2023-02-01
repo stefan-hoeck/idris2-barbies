@@ -9,12 +9,13 @@ import Derive.BarbieInfo
 --          Claims
 --------------------------------------------------------------------------------
 
-btravTpe : TTImp -> TTImp
-btravTpe arg =
+btravTpe : (k : TTImp) -> TTImp -> TTImp
+btravTpe k arg =
   `(
-       {0 e,f,g : Type -> Type}
+       {0 e : Type -> Type}
+    -> {0 f,g : ~(k) -> Type}
     -> Applicative e
-    => ((0 a : Type) -> f a -> e (g a))
+    => ((0 a : ~(k)) -> f a -> e (g a))
     -> ~(arg) f
     -> e (~(arg) g)
   )
@@ -22,15 +23,14 @@ btravTpe arg =
 export
 btravClaim : Visibility -> (fun : Name) -> (p : BarbieInfo) -> Decl
 btravClaim vis fun p =
-  simpleClaim vis fun $ piAll (btravTpe p.applied) p.implicits
+  simpleClaim vis fun $ piAll (btravTpe p.kind p.applied) p.implicits
 
 ||| Top-level declaration implementing the `Eq` interface for
 ||| the given data type.
 export
 travImplClaim : Visibility -> (impl : Name) -> (p : BarbieInfo) -> Decl
 travImplClaim vis impl p =
-  let arg := p.applied
-      tpe := piAll `(TraversableB ~(arg)) p.implicits
+  let tpe := piAll `(TraversableB ~(p.kind) ~(p.applied)) p.implicits
    in implClaimVis vis impl tpe
 
 --------------------------------------------------------------------------------
