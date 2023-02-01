@@ -1,0 +1,6 @@
+package barbies-docs
+version = 0.1.0
+authors = "stefan-hoeck"
+depends = barbies
+modules = Intro
+sourcedir = "src"

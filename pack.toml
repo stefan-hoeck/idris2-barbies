@@ -1,0 +1,9 @@
+[custom.all.barbies]
+type = "local"
+path = "."
+ipkg = "barbies.ipkg"
+
+[custom.all.barbies-docs]
+type = "local"
+path = "docs"
+ipkg = "docs.ipkg"
