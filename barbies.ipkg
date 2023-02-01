@@ -9,11 +9,13 @@ depends = elab-util
 
 sourcedir = "src"
 modules = Control.Barbie
+        , Control.DistributiveB
         , Control.FunctorB
         , Control.ApplicativeB
         , Control.TraversableB
 
         , Derive.ApplicativeB
+        , Derive.DistributiveB
         , Derive.Barbie
         , Derive.BarbieInfo
         , Derive.FunctorB
