@@ -9,35 +9,45 @@ import Derive.Prelude
 %default total
 %language ElabReflection
 
-0 Up : Type -> Type
-Up a = a -> a
+public export
+data Field = Id | Name | Email
 
-record User (f : Type -> Type) where
+public export
+0 Tpe : Field -> Type
+Tpe Id    = Nat
+Tpe Name  = String
+Tpe Email = String
+
+public export
+0 Up : Field -> Type
+Up x = Tpe x -> Tpe x
+
+record User (f : Field -> Type) where
   constructor U
-  id    : f Nat
-  name  : f String
-  email : f String
+  id    : f Id
+  name  : f Name
+  email : f Email
 
 %runElab derive "User" [Show,Eq,Barbie]
 
-user : User I
-user = U 12 "Gundi" "gundi@gmail.com"
+user : User Tpe
+user = U 12 "Stefan" "gundi@gmail.com"
 
-userM : User Maybe
+userM : User (Maybe . Tpe)
 userM = bmap Just user
 
-userEmpty : User Maybe
+userEmpty : User (Maybe . Tpe)
 userEmpty = bempty
 
-user2 : User I
-user2 = [| apply (U {f = \x => x -> x} (*2) reverse id) user |]
+user2 : User Tpe
+user2 = [| apply (U {f = Up} (*2) reverse id) user |]
 
 --------------------------------------------------------------------------------
 --          Validation
 --------------------------------------------------------------------------------
 
-0 Val : Type -> Type
-Val a = a -> Either String a
+0 Val : Field -> Type
+Val a = Tpe a -> Either String (Tpe a)
 
 emailChar : Char -> Bool
 emailChar '.' = True
@@ -45,7 +55,7 @@ emailChar '-' = True
 emailChar '_' = True
 emailChar c   = isAlphaNum c
 
-valName : Val String
+valName : Val Name
 valName s =
   if all (not . isControl) (unpack s)
      then Right s
@@ -54,17 +64,17 @@ valName s =
 invalidEmail : String -> Either String a
 invalidEmail s = Left "Invalid email address: \{show s}"
 
-valEmail : Val String
+valEmail : Val Email
 valEmail s = case forget $ split ('@' ==) (unpack s) of
-  [x,y] => 
+  [x,y] =>
     if all emailChar x && all emailChar y then Right s else invalidEmail s
   _     => invalidEmail s
 
 userVal : User Val
 userVal = U Right valName valEmail
 
-validate : User I -> Either String (User I)
-validate u = bsequence' [| apply userVal u |]
+validate : User Tpe -> Either String (User Tpe)
+validate u = bsequence [| apply userVal u |]
 
 --------------------------------------------------------------------------------
 --          Main
