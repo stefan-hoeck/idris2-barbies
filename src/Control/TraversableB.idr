@@ -1,5 +1,6 @@
 module Control.TraversableB
 
+import Control.Applicative.Const
 import Control.FunctorB
 
 %default total
@@ -29,3 +30,13 @@ bsequence = btraverse_ (\_,x => x)
 public export
 bsequence' : Applicative e => TraversableB Type t => t e -> e (t I)
 bsequence' = btraverse_ (\_,x => x)
+
+public export
+bfoldMap :
+     {0 f : _}
+  -> Monoid m
+  => TraversableB k t
+  => ({0 a : k} -> f a -> m)
+  -> t f
+  -> m
+bfoldMap g b = runConst $ btraverse {g = f} (MkConst . g) b
