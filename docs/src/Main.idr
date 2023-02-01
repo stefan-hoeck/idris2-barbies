@@ -1,5 +1,7 @@
 module Main
 
+import Data.Maybe
+import Language.Reflection.Pretty
 import Control.Barbie
 import Data.List1
 import Data.String
@@ -75,6 +77,22 @@ userVal = U Right valName valEmail
 
 validate : User Tpe -> Either String (User Tpe)
 validate u = bsequence [| apply userVal u |]
+
+--------------------------------------------------------------------------------
+--          Tables
+--------------------------------------------------------------------------------
+
+0 UserColumns : Nat -> Type
+UserColumns n = User (Vect n . Tpe)
+
+0 UserRows : Nat -> Type
+UserRows n = Vect n (User Tpe)
+
+rows : {n : _} -> UserColumns n -> UserRows n
+rows = bsequence
+
+columns : UserRows n -> UserColumns n
+columns = bdistribute
 
 --------------------------------------------------------------------------------
 --          Main

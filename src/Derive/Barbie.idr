@@ -2,6 +2,7 @@ module Derive.Barbie
 
 import public Derive.ApplicativeB
 import public Derive.BarbieInfo
+import public Derive.DistributiveB
 import public Derive.FunctorB
 import public Derive.TraversableB
 
@@ -15,6 +16,7 @@ BarbieVis vis nms p =
       FunctorBVis vis nms p
     , ApplicativeBVis vis nms p
     , TraversableBVis vis nms p
+    , DistributiveBVis vis nms p
     ]
 
 ||| Alias for `BarbieVis Public`
