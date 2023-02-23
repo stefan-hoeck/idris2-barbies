@@ -5,6 +5,7 @@ import public Derive.BarbieInfo
 import public Derive.DistributiveB
 import public Derive.FunctorB
 import public Derive.TraversableB
+import Language.Reflection.Util
 
 ||| Generate declarations for all barbie interfaces
 ||| (`FunctorB`, `ApplicativeB`, and `TraversableB`)

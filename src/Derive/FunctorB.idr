@@ -1,6 +1,6 @@
 module Derive.FunctorB
 
-import public Language.Reflection.Derive
+import Language.Reflection.Util
 import Derive.BarbieInfo
 
 %default total
@@ -37,7 +37,8 @@ functorImplClaim vis impl p =
 
 export
 functorImplDef : (fun, impl : Name) -> Decl
-functorImplDef fun impl = def impl [var impl .= var "MkFunctorB" .$ var fun]
+functorImplDef fun impl =
+  def impl [patClause (var impl) (var "MkFunctorB" `app` var fun)]
 
 parameters (farg : Name)
 
@@ -50,7 +51,7 @@ parameters (farg : Name)
   functorClauses fun ti = map clause ti.cons
    where
      clause : Con ti.arty ti.args -> Clause
-     clause = mapArgs regular (\x => var fun .$ var "fun" .$ x) arg
+     clause = mapArgs regular (\x => `(~(var fun) fun ~(x))) arg
 
   export
   functorDef : Name -> TypeInfo -> Decl

@@ -1,6 +1,6 @@
 module Derive.ApplicativeB
 
-import public Language.Reflection.Derive
+import Language.Reflection.Util
 import Derive.BarbieInfo
 
 %default total
@@ -51,7 +51,7 @@ applicativeImplClaim vis impl p =
 export
 applicativeImplDef : (bpure, bprod, impl : Name) -> Decl
 applicativeImplDef bpure bprod impl =
-  def impl [var impl .= var "MkApplicativeB" .$ var bpure .$ var bprod]
+  def impl [patClause (var impl) `(MkApplicativeB ~(var bpure) ~(var bprod))]
 
 prodArg : BoundArg 2 Regular -> TTImp
 prodArg (BA g [x,y] _) = `(MkPair ~(varStr x) ~(varStr y))
@@ -59,7 +59,7 @@ prodArg (BA g [x,y] _) = `(MkPair ~(varStr x) ~(varStr y))
 export
 prodClause : (fun : Name) -> Con n vs -> Clause
 prodClause f =
-  mapArgs2 regular (\x,y => var f .$ x .$ y) prodArg
+  mapArgs2 regular (\x,y => `(~(var f) ~(x) ~(y))) prodArg
 
 export
 prodDef : Name -> Con n vs -> Decl
@@ -69,7 +69,7 @@ export
 pureDef : Name -> Con n vs -> Decl
 pureDef f c =
   let rhs := injArgs explicit (const `(fun _)) c
-   in def f [var f .$ `(fun) .= rhs ]
+   in def f [patClause `(~(var f) fun) rhs]
 
 --------------------------------------------------------------------------------
 --          Deriving
