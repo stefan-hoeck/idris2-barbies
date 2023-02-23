@@ -94,6 +94,16 @@ rows = bsequence
 columns : UserRows n -> UserColumns n
 columns = bdistribute
 
+oopsie : User (const Void) -> a
+oopsie (U _ _ _) impossible
+
+--------------------------------------------------------------------------------
+--          Constraint
+--------------------------------------------------------------------------------
+
+showFields : (prf : User (Show . f)) => User f -> User (const String)
+showFields x = bzipWith (\_ => show) prf x
+
 --------------------------------------------------------------------------------
 --          Main
 --------------------------------------------------------------------------------
