@@ -1,6 +1,6 @@
 module Derive.TraversableB
 
-import public Language.Reflection.Derive
+import Language.Reflection.Util
 import Derive.BarbieInfo
 
 %default total
@@ -39,7 +39,8 @@ travImplClaim vis impl p =
 
 export
 travImplDef : (fun, impl : Name) -> Decl
-travImplDef fun impl = def impl [var impl .= var "MkTraversableB" .$ var fun]
+travImplDef fun impl =
+  def impl [patClause (var impl) `(MkTraversableB ~(var fun))]
 
 rhs : Name -> SnocList TTImp -> TTImp
 rhs nm [<]       = `(pure ~(var nm))
@@ -59,7 +60,7 @@ parameters (farg : Name)
    where
      clause : Con ti.arty ti.args -> Clause
      clause c =
-       accumArgs regular (\x => var fun .$ var "fun" .$ x) (rhs c.name) arg c
+       accumArgs regular (\x => `(~(var fun) fun ~(x))) (rhs c.name) arg c
 
   export
   travDef : Name -> TypeInfo -> Decl

@@ -1,6 +1,6 @@
 module Derive.DistributiveB
 
-import public Language.Reflection.Derive
+import Language.Reflection.Util
 import Derive.BarbieInfo
 
 %default total
@@ -38,18 +38,19 @@ distImplClaim vis impl p =
 
 export
 distImplDef : (fun, impl : Name) -> Decl
-distImplDef fun impl = def impl [var impl .= var "MkDistributiveB" .$ var fun]
+distImplDef fun impl =
+  def impl [patClause (var impl) `(MkDistributiveB ~(var fun))]
 
 rhs : Name -> SnocList TTImp -> TTImp
 rhs nm [<]       = var nm
-rhs nm (sx :< x) = rhs nm sx .$ x
+rhs nm (sx :< x) = rhs nm sx `app` x
 
 arg : BoundArg 0 RegularNamed -> TTImp
 arg (BA g [] _) = `(~(var $ argName g) <$> x_)
 
 export
 distClause : (fun : Name) -> Con n vs -> Clause
-distClause fun c = var fun .$ `(x_) .= injArgs regularNamed arg c
+distClause fun c = patClause `(~(var fun) x_) (injArgs regularNamed arg c)
 
 export
 distDef : Name -> Con n vs -> Decl

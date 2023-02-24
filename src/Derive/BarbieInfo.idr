@@ -1,6 +1,6 @@
 module Derive.BarbieInfo
 
-import public Language.Reflection.Derive
+import Language.Reflection.Util
 
 %default total
 

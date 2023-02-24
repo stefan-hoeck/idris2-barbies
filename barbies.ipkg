@@ -5,7 +5,6 @@ license = "BSD-3"
 brief = "Barbies: Data types that can change their clothes"
 
 depends = elab-util
-        , elab-pretty
 
 sourcedir = "src"
 modules = Control.Barbie

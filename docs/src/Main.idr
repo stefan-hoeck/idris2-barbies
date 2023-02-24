@@ -1,7 +1,6 @@
 module Main
 
 import Data.Maybe
-import Language.Reflection.Pretty
 import Control.Barbie
 import Data.List1
 import Data.String
