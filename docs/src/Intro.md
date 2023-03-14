@@ -14,6 +14,6 @@ import Derive.Prelude
 %language ElabReflection
 ```
 
-<!-- vi: filetype=idris2
+<!-- vi: filetype=idris2:syntax=markdown
 -->
 
