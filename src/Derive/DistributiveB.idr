@@ -46,7 +46,7 @@ rhs nm [<]       = var nm
 rhs nm (sx :< x) = rhs nm sx `app` x
 
 arg : BoundArg 0 RegularNamed -> TTImp
-arg (BA g [] _) = `(~(var $ argName g) <$> x_)
+arg (BA g [] _) = `(Prelude.map ~(var $ argName g) x_)
 
 export
 distClause : (fun : Name) -> Con n vs -> Clause
