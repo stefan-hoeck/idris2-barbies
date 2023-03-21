@@ -43,8 +43,8 @@ travImplDef fun impl =
   def impl [patClause (var impl) `(MkTraversableB ~(var fun))]
 
 rhs : Name -> SnocList TTImp -> TTImp
-rhs nm [<]       = `(pure ~(var nm))
-rhs nm (sx :< x) = `((<*>) ~(rhs nm sx) ~(x))
+rhs nm [<]       = `(Prelude.pure ~(var nm))
+rhs nm (sx :< x) = `(Prelude.(<*>) ~(rhs nm sx) ~(x))
 
 parameters (farg : Name)
 
