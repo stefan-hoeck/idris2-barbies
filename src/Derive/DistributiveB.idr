@@ -70,9 +70,10 @@ DistributiveBVis vis nms p = case barbieArgs p.info.args of
       let ndist := funName p "bdist"
           impl  := implName p "DistributiveB"
           bti   := BI p prf
-       in Right [ TL (bdistClaim vis ndist bti) (distDef ndist c)
-                , TL (distImplClaim vis impl bti) (distImplDef ndist impl)
-                ]
+       in Right
+            [ TL (bdistClaim vis ndist bti) (distDef ndist c)
+            , TL (distImplClaim vis impl bti) (distImplDef ndist impl)
+            ]
     _ => failRecord "DistributiveB"
   Nothing => Left $ "Not a barbie type"
 

@@ -22,8 +22,8 @@ bempty = bpure empty
 public export
 bzipWith :
      {0 f,g,h : _}
-  -> ApplicativeB k t
-  => ({0 a : k} -> f a -> g a -> h a)
+  -> {auto _ : ApplicativeB k t}
+  -> ({0 a : k} -> f a -> g a -> h a)
   -> t f
   -> t g
   -> t h
@@ -32,8 +32,8 @@ bzipWith fun tf tg = bmap (\(x,y) => fun x y) $ bprod tf tg
 public export
 bzipWith3 :
      {0 f,g,h,i : _}
-  -> ApplicativeB k t
-  => ({0 a : k} -> f a -> g a -> h a -> i a)
+  -> {auto _ : ApplicativeB k t}
+  -> ({0 a : k} -> f a -> g a -> h a -> i a)
   -> t f
   -> t g
   -> t h
@@ -47,8 +47,8 @@ namespace Syntax
 
   public export
   (<*>) :
-         ApplicativeB k t
-     => {0 f,g : k -> Type}
+        {auto _ : ApplicativeB k t}
+     -> {0 f,g : k -> Type}
      -> t (\x => f x -> g x)
      -> t f
      -> t g

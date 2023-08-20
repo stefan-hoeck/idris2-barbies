@@ -86,11 +86,12 @@ ApplicativeBVis vis nms p = case barbieArgs p.info.args of
           nprod := funName p "bprod"
           impl  := implName p "ApplicativeB"
           bti   := BI p prf
-       in Right [ TL (bpureClaim vis npure bti) (pureDef npure c)
-                , TL (bprodClaim vis nprod bti) (prodDef nprod c)
-                , TL (applicativeImplClaim vis impl bti)
-                     (applicativeImplDef npure nprod impl)
-                ]
+       in Right
+            [ TL (bpureClaim vis npure bti) (pureDef npure c)
+            , TL (bprodClaim vis nprod bti) (prodDef nprod c)
+            , TL (applicativeImplClaim vis impl bti)
+                 (applicativeImplDef npure nprod impl)
+            ]
     _ => failRecord "ApplicativeB"
   Nothing => Left $ "Not a barbie type"
 
