@@ -14,8 +14,8 @@ btravTpe k arg =
   `(
        {0 e : Type -> Type}
     -> {0 f,g : ~(k) -> Type}
-    -> Applicative e
-    => ((0 a : ~(k)) -> f a -> e (g a))
+    -> {auto _ : Applicative e}
+    -> ((0 a : ~(k)) -> f a -> e (g a))
     -> ~(arg) f
     -> e (~(arg) g)
   )
@@ -57,6 +57,7 @@ parameters (farg : Name)
   export
   travClauses : (fun : Name) -> TypeInfo -> List Clause
   travClauses fun ti = map clause ti.cons
+
    where
      clause : Con ti.arty ti.args -> Clause
      clause c =
@@ -80,9 +81,10 @@ TraversableBVis vis nms p = case barbieArgs p.info.args of
         impl := implName p "TraversableB"
         farg := barbieArg prf
         bti  := BI p prf
-     in Right [ TL (btravClaim vis fun bti) (travDef (barbieArg prf) fun p.info)
-              , TL (travImplClaim vis impl bti) (travImplDef fun impl)
-              ]
+     in Right
+          [ TL (btravClaim vis fun bti) (travDef (barbieArg prf) fun p.info)
+          , TL (travImplClaim vis impl bti) (travImplDef fun impl)
+          ]
   Nothing => Left $ "Not a barbie type"
 
 ||| Alias for `TraversableBVis Public`

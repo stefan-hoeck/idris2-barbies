@@ -10,21 +10,26 @@ interface FunctorB k t => TraversableB k t | t where
   constructor MkTraversableB
   btraverse_ :
        {0 f,g : _}
-    -> Applicative e
-    => ((0 a : k) -> f a -> e (g a))
+    -> {auto _ : Applicative e}
+    -> ((0 a : k) -> f a -> e (g a))
     -> t f -> e (t g)
 
 public export
 btraverse :
-       {0 f,g : _}
-    -> Applicative e
-    => TraversableB k t
-    => ({0 a : k} -> f a -> e (g a))
-    -> t f -> e (t g)
+     {0 f,g : _}
+  -> {auto _ : Applicative e}
+  -> {auto _ : TraversableB k t}
+  -> ({0 a : k} -> f a -> e (g a))
+  -> t f -> e (t g)
 btraverse fun = btraverse_ (\_ => fun)
 
 public export
-bsequence : {0 f : _} -> Applicative e => TraversableB k t => t (e . f) -> e (t f)
+bsequence :
+     {0 f : _}
+  -> {auto _ : Applicative e}
+  -> {auto _ : TraversableB k t}
+  -> t (e . f)
+  -> e (t f)
 bsequence = btraverse_ (\_,x => x)
 
 public export
@@ -34,9 +39,9 @@ bsequence' = btraverse_ (\_,x => x)
 public export
 bfoldMap :
      {0 f : _}
-  -> Monoid m
-  => TraversableB k t
-  => ({0 a : k} -> f a -> m)
+  -> {auto _ : Monoid m}
+  -> {auto _ : TraversableB k t}
+  -> ({0 a : k} -> f a -> m)
   -> t f
   -> m
 bfoldMap g b = runConst $ btraverse {g = f} (MkConst . g) b

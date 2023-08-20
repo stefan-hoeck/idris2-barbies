@@ -71,9 +71,10 @@ FunctorBVis vis nms p = case barbieArgs p.info.args of
         impl := implName p "FunctorB"
         farg := barbieArg prf
         bti  := BI p prf
-     in Right [ TL (bmapClaim vis fun bti) (functorDef (barbieArg prf) fun p.info)
-              , TL (functorImplClaim vis impl bti) (functorImplDef fun impl)
-              ]
+     in Right
+          [ TL (bmapClaim vis fun bti) (functorDef (barbieArg prf) fun p.info)
+          , TL (functorImplClaim vis impl bti) (functorImplDef fun impl)
+          ]
   Nothing => Left $ "Not a barbie type"
 
 ||| Alias for `FunctorBVis Public`
