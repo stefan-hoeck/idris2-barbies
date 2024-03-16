@@ -5,6 +5,7 @@ license = "BSD-3"
 brief = "Barbies: Data types that can change their clothes"
 
 depends = elab-util
+        , monocle
 
 sourcedir = "src"
 modules = Control.Barbie
@@ -12,10 +13,12 @@ modules = Control.Barbie
         , Control.FunctorB
         , Control.ApplicativeB
         , Control.TraversableB
+        , Control.RecordB
 
         , Derive.ApplicativeB
-        , Derive.DistributiveB
         , Derive.Barbie
         , Derive.BarbieInfo
+        , Derive.DistributiveB
         , Derive.FunctorB
+        , Derive.RecordB
         , Derive.TraversableB
