@@ -6,6 +6,7 @@ import Data.List1
 import Data.String
 import Derive.Barbie
 import Derive.Prelude
+import Monocle
 
 %default total
 %language ElabReflection
@@ -23,13 +24,19 @@ public export
 0 Up : Field -> Type
 Up x = Tpe x -> Tpe x
 
+frstToUpper : String -> String
+frstToUpper s =
+  case unpack s of
+    h::t => pack $ toUpper h :: t
+    []   => ""
+
 record User (f : Field -> Type) where
   constructor U
   id    : f Id
   name  : f Name
   email : f Email
 
-%runElab derive "User" [Show,Eq,Barbie]
+%runElab derive "User" [Show,Eq,Barbie,RecordB frstToUpper]
 
 user : User Tpe
 user = U 12 "Stefan" "gundi@gmail.com"

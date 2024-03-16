@@ -4,6 +4,7 @@ import public Derive.ApplicativeB
 import public Derive.BarbieInfo
 import public Derive.DistributiveB
 import public Derive.FunctorB
+import public Derive.RecordB
 import public Derive.TraversableB
 import Language.Reflection.Util
 
