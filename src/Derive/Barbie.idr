@@ -6,6 +6,7 @@ import public Derive.DistributiveB
 import public Derive.FunctorB
 import public Derive.RecordB
 import public Derive.TraversableB
+import public Control.Barbie
 import Language.Reflection.Util
 
 ||| Generate declarations for all barbie interfaces
