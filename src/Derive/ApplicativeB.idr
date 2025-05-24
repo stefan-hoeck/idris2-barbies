@@ -54,7 +54,7 @@ applicativeImplDef bpure bprod impl =
   def impl [patClause (var impl) `(MkApplicativeB ~(var bpure) ~(var bprod))]
 
 prodArg : BoundArg 2 Regular -> TTImp
-prodArg (BA g [x,y] _) = `(MkPair ~(varStr x) ~(varStr y))
+prodArg (BA g [x,y] _) = `(MkPair ~(var x) ~(var y))
 
 export
 prodClause : (fun : Name) -> Con n vs -> Clause
