@@ -51,8 +51,8 @@ parameters (farg : Name)
   arg : BoundArg 1 Regular -> TTImp
   arg (BA g [x] _) =
     if hasFArg farg g.type
-       then `(fun _ ~(varStr x))
-       else `(pure ~(varStr x))
+       then `(fun _ ~(var x))
+       else `(pure ~(var x))
 
   export
   travClauses : (fun : Name) -> TypeInfo -> List Clause
